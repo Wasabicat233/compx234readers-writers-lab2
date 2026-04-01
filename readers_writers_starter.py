@@ -68,7 +68,11 @@ class ReadersWritersMonitor:
         """
         with self.condition:
             # TODO: Replace 'pass' with your logic
-            pass
+            while self.active_writers > 0:
+                self.condition.wait()
+            self.active_readers += 1
+            print(f"[MONITOR] Reader {reader_id} starts reading | Active readers: {self.active_readers}")
+
 
     def start_write(self, writer_id: int) -> None:
         """
