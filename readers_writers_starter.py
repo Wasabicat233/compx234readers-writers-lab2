@@ -189,7 +189,8 @@ def main() -> None:
         thread.start()
     
     # TODO: Wait for all threads to finish
-
+    for thread in all_threads:
+        thread.join()
 
     # TODO: Print final message that simulation completed
 
