@@ -55,8 +55,10 @@ class ReadersWritersMonitor:
         """
         with self.condition:
             # TODO: Replace 'pass' with your logic
+            # wait until no active writers
             while self.active_writers > 0:
                 self.condition.wait()
+            # increase active readers
             self.active_readers += 1
             print(f"[MONITOR] Reader {reader_id} starts reading | Active readers: {self.active_readers}")
 
@@ -71,8 +73,10 @@ class ReadersWritersMonitor:
         """
         with self.condition:
             # TODO: Replace 'pass' with your logic
+            # decrease active readers
             self.active_readers -= 1
             print(f"[MONITOR] Reader {reader_id} stops reading  | Active readers: {self.active_readers}")
+            # if it is the last reader, wake up the waiting threads
             if self.active_readers == 0:
                 self.condition.notify_all()
 
@@ -90,9 +94,12 @@ class ReadersWritersMonitor:
         """
         with self.condition:
             # TODO: Replace 'pass' with your logic
+            # increase waiting writers
             self.waiting_writers += 1
+            # wait until there are no active readers and active writers
             while self.active_readers > 0 or self.active_writers > 0:
                 self.condition.wait()
+            # writer starts writing, update the counter
             self.waiting_writers -= 1
             self.active_writers += 1
             print(f"Writer {writer_id} starts writing (waiting writers: {self.waiting_writers})")
@@ -108,8 +115,10 @@ class ReadersWritersMonitor:
         """
         with self.condition:
             # TODO: Replace 'pass' with your logic
+            # decrease active writers
             self.active_writers -= 1
             print(f"Writer {writer_id} ends writing")
+            # wake up all waiting threads
             self.condition.notify_all()
 
 # Donot Change this
